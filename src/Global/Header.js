@@ -34,3 +34,25 @@ export const AssistantSubHeader = styled(AssistantHeader)`
   align-items: center;
   padding-left: 2rem;
 `;
+
+export const FormHeader = styled.header`
+  position: relative;
+  height: max-content;
+  min-height: 6rem;
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  padding: 2rem;
+  background-color: ${(props) => props.bgColor};
+`;
+
+export const FormMainHeader = styled(FormHeader)`
+  align-items: center;
+`;
+
+export const FormSubHeader = styled.h3`
+  position: relative;
+  font-size: 3rem;
+  color: #fefefe;
+`;

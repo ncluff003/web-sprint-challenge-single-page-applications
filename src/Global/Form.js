@@ -10,3 +10,7 @@ export const Form = styled.form`
   align-items: center;
   margin-top: 3rem;
 `;
+
+export const OrderForm = styled(Form)`
+  margin-top: 10rem;
+`;

@@ -16,4 +16,5 @@ export const HeroContainer = styled.header`
 
 export const FoodInfoContainer = styled(HeroContainer)`
   background-image: none;
+  padding: 4rem 0 0;
 `;

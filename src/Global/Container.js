@@ -22,4 +22,33 @@ export const FoodContainer = styled.section`
   justify-content: space-evenly;
   align-items: center;
   padding: 3rem;
+  overflow-y: auto;
+`;
+
+export const FormContainerClose = styled.div`
+  position: fixed;
+  height: 2rem;
+  width: 2rem;
+  top: 2rem;
+  right: 5rem;
+  z-index: 15;
+  font-size: 4rem;
+  color: #ff4b00cc;
+
+  &:hover {
+    cursor: pointer;
+    color: #ff4b00;
+    transition: color 0.5s;
+  }
+`;
+
+export const FormContainer = styled(Container)`
+  position: fixed;
+  justify-content: flex-start;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #222222f2;
+  z-index: 10;
+  overflow-y: auto;
 `;

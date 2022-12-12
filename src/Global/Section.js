@@ -16,3 +16,9 @@ export const FormInnerSection = styled(FormSection)`
   height: 100%;
   width: 90%;
 `;
+
+export const OrderFormSection = styled.section`
+  position: relative;
+  height: max-content;
+  width: 100%;
+`;
