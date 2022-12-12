@@ -6,6 +6,7 @@ export const HeroContainer = styled.header`
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   background-image: url(${require("../Pizza.jpg")});

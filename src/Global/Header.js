@@ -8,3 +8,9 @@ export const Header = styled.h1`
   font-weight: bolder;
   color: #fefefe;
 `;
+
+export const SubHeader = styled(Header)`
+  font-size: 3rem;
+  font-weight: 400;
+  margin: 0 0 2rem 0;
+`;
