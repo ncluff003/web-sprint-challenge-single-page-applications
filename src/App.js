@@ -12,6 +12,7 @@ import { Label } from "./Global/Label";
 import { Input } from "./Global/Input";
 import { FormMainHeaderText, TagLine } from "./Global/Paragraph";
 import { Restaurant } from "./Home/Restaurant";
+import axios from "axios";
 
 const RestaurantData = [
   {
@@ -72,6 +73,28 @@ const RestaurantData = [
 
 const App = () => {
   const [restaurants, setRestaurants] = useState([...RestaurantData]);
+  const [location, setLocation] = useState("");
+
+  const getLocation = (event) => {
+    event.preventDefault();
+    const clicked = event.target.closest("button");
+    const inputValue = clicked.previousElementSibling.firstChild.value;
+    try {
+      let APIKey = `cc239c0562bc4569b68f63b4b01edd12`;
+      const locationGetter = async () => {
+        const response = await axios({
+          method: "GET",
+          url: `https://api.geoapify.com/v1/geocode/search?text=${inputValue}&apiKey=${APIKey}`,
+        });
+        let responseLocation = response.data.features[0].properties;
+        let address = `${responseLocation.city} ${responseLocation.state}`;
+        setLocation(address);
+      };
+      locationGetter();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const hideFavorite = (event) => {
     event.preventDefault();
@@ -144,10 +167,10 @@ const App = () => {
         <Form>
           <FormSection>
             <FormInnerSection>
-              <Input id="address" name="address" className="address" placeholder="Enter Your Address" />
-              <Label htmlFor="address">Address</Label>
+              <Input id="address" name="address" className="address" placeholder="ie - 1234 Example St City, State, Zipcode" />
+              <Label htmlFor="address">Full Address</Label>
             </FormInnerSection>
-            <SearchButton type="submit">
+            <SearchButton type="submit" onClick={(e) => getLocation(e)}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </SearchButton>
           </FormSection>
@@ -163,7 +186,7 @@ const App = () => {
         <AssistantHeader weight="normal" color="#ff4b00">
           Not Our Favorite, But Great Food Nonetheless
         </AssistantHeader>
-        <AssistantSubHeader>Food Delivered To You:</AssistantSubHeader>
+        <AssistantSubHeader>Food Delivered To {location ? location : `You`}:</AssistantSubHeader>
         <FoodContainer>
           {restaurants &&
             restaurants.map((restaurant, index) => {
