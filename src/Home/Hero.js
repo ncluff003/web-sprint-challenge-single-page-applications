@@ -13,3 +13,7 @@ export const HeroContainer = styled.header`
   background-size: cover;
   background-repeat: no-repeat;
 `;
+
+export const FoodInfoContainer = styled(HeroContainer)`
+  background-image: none;
+`;

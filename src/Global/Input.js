@@ -10,7 +10,7 @@ export const Input = styled.input`
   align-items: center;
   padding: 2rem;
   font-family: MADE Tommy Soft;
-  font-size: 2.6rem;
+  font-size: 2rem;
   font-weight: 400;
   color: #fefefecc;
 
@@ -54,6 +54,6 @@ export const Input = styled.input`
   }
   &:not(:placeholder-shown) + label,
   &:focus + label {
-    transform: translate(-5rem, -6rem) scale(0.85);
+    transform: translate(-5rem, -4.5rem) scale(0.85);
   }
 `;

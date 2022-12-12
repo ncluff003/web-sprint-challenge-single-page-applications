@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 export const Button = styled.button`
   position: relative;
-  height: max-content;
+  height: 6rem;
   width: max-content;
-  padding: 2rem;
+  padding: 1rem;
   &:hover {
     cursor: pointer;
     transition: background-color 0.5s, border 0.5s, color 0.5s;
@@ -12,7 +12,7 @@ export const Button = styled.button`
 `;
 
 export const SearchButton = styled(Button)`
-  min-height: 8rem;
+  min-height: 6rem;
   width: 10%;
   border: 0.2rem solid #ff4b00cc;
   background-color: #ff4b0040;
@@ -24,5 +24,29 @@ export const SearchButton = styled(Button)`
     background-color: #ff4b00;
     border-color: #ff4b00;
     color: #fefefecc;
+  }
+`;
+
+export const OrderButton = styled(Button)`
+  height: max-content;
+  min-height: 6rem;
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 2rem;
+  background-color: transparent;
+  border: 0.2rem solid #fefefecc;
+  border-radius: 5rem;
+  font-size: 2rem;
+  color: #fefefecc;
+  margin-top: 3rem;
+
+  &:hover {
+    border-color: #ff4b00;
+    color: #ff4b00;
+  }
+
+  &:active {
+    background-color: #ff4b00;
+    color: #fefefe;
   }
 `;

@@ -10,7 +10,7 @@ export const Label = styled.label`
   align-items: center;
   padding: 2rem;
   font-family: MADE Tommy Soft;
-  font-size: 2.6rem;
+  font-size: 2rem;
   font-weight: 400;
   color: #fefefecc;
   transition: transform 0.5s, background-color 0.25s, border 0.25s, color 0.25s;
