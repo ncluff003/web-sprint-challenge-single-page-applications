@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, Route } from "react-router-dom";
-import { Container, FoodContainer, FormContainer, FormContainerClose, InvisibleCheckboxContainer, SauceInputContainer } from "./Global/Container";
+import { Container, FoodContainer, FormContainer, FormContainerClose } from "./Global/Container";
 import { HeroContainer, FoodInfoContainer } from "./Home/Hero";
-import { AssistantHeader, AssistantSubHeader, FormHeader, FormMainHeader, FormSubHeader, Header, SubHeader } from "./Global/Header";
-import { FormInnerSection, FormSection, InnerOrderFormSection, OrderFormSection } from "./Global/Section";
-import { Button, OrderButton, SearchButton } from "./Global/Button";
+import { AssistantHeader, AssistantSubHeader, Header, SubHeader } from "./Global/Header";
+import { FormInnerSection, FormSection } from "./Global/Section";
+import { OrderButton, SearchButton } from "./Global/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { Form, OrderForm } from "./Global/Form";
-import { InvisibleCheckBoxLabel, CheckBoxLabel, Label, OrderFormLabel, RadioLabel } from "./Global/Label";
-import { CheckBoxInput, Input, InvisibleCheckBox, OrderFormInput, RadioContainer, RadioInput, Select } from "./Global/Input";
-import { FormMainHeaderText, TagLine } from "./Global/Paragraph";
+import { Label } from "./Global/Label";
+import { Input } from "./Global/Input";
+import { TagLine } from "./Global/Paragraph";
 import { Restaurant } from "./Home/Restaurant";
+import { handleChange } from "./Global/ChangeHandler";
 import axios from "axios";
 
 const RestaurantData = [
@@ -80,6 +81,11 @@ const initialFormValues = {
     sauces: [],
   },
   toppings: {
+    activeMenu: {
+      meat: false,
+      veggies: false,
+    },
+    chosenToppings: [],
     meat: {
       meatball: false,
       beef: false,
@@ -113,67 +119,6 @@ const App = () => {
   const [restaurants, setRestaurants] = useState([...RestaurantData]);
   const [location, setLocation] = useState("");
   const [formValues, setFormValues] = useState(initialFormValues);
-
-  console.log(formValues);
-
-  const activateMenu = (event) => {
-    const clicked = event.target;
-    // const checkbox = clicked.closest("label").previousElementSibling;
-    const clickedLabel = clicked.closest("label");
-    const labels = document.querySelectorAll(".topping-label");
-    labels.forEach((label) => {
-      if (label === clickedLabel) {
-        label.classList.add("checked");
-      } else {
-        label.classList.remove("checked");
-      }
-    });
-    const checkboxes = document.querySelectorAll(".topping-menu");
-  };
-
-  const handleChange = (event) => {
-    if (event.target.type !== `radio` && event.target.type !== `checkbox`) {
-      event.preventDefault();
-    }
-    const { type, name, value, checked } = event.target;
-    const valueToUse = type === "checkbox" ? checked : type === "radio" ? checked : value;
-    console.log(type, name, value, valueToUse);
-    if (name === `name-input`) {
-      setFormValues({ ...formValues, ["name"]: value });
-    } else if (type === "select-one") {
-      if (value === `-- Select Size --`) {
-        setFormValues({ ...formValues, ["size"]: "" });
-      } else if (value !== `-- Select Size --`) {
-        setFormValues({ ...formValues, ["size"]: valueToUse });
-      }
-    } else if (name === "crust") {
-      setFormValues({ ...formValues, [name]: event.target.closest("label").textContent });
-    } else if (name === "sauceAmount") {
-      setFormValues({ ...formValues, ["sauce"]: { ...formValues.sauce, ["amount"]: value, ["sauces"]: [] } });
-    } else if (name === "sauce") {
-      if (formValues.sauce.amount === `Half`) {
-        if (formValues.sauce.sauces.length === 2 && !formValues.sauce.sauces.includes(value)) {
-          return;
-        } else if (formValues.sauce.sauces.length === 2 && formValues.sauce.sauces.includes(value)) {
-          setFormValues({ ...formValues, ["sauce"]: { ...formValues.sauce, ["sauces"]: formValues.sauce.sauces.filter((sauce) => sauce !== value) } });
-        } else if (formValues.sauce.sauces.length < 2 && formValues.sauce.sauces.includes(value)) {
-          setFormValues({ ...formValues, ["sauce"]: { ...formValues.sauce, ["sauces"]: formValues.sauce.sauces.filter((sauce) => sauce !== value) } });
-        } else if (formValues.sauce.sauces.length < 2 && !formValues.sauce.sauces.includes(value)) {
-          setFormValues({ ...formValues, ["sauce"]: { ...formValues.sauce, ["sauces"]: [...formValues.sauce.sauces, value] } });
-        }
-      } else if (formValues.sauce.amount === `Whole`) {
-        if (formValues.sauce.sauces.length === 1 && !formValues.sauce.sauces.includes(value)) {
-          return;
-        } else if (formValues.sauce.sauces.length === 1 && formValues.sauce.sauces.includes(value)) {
-          setFormValues({ ...formValues, ["sauce"]: { ...formValues.sauce, ["sauces"]: formValues.sauce.sauces.filter((sauce) => sauce !== value) } });
-        } else if (formValues.sauce.sauces.length < 1 && formValues.sauce.sauces.includes(value)) {
-          setFormValues({ ...formValues, ["sauce"]: { ...formValues.sauce, ["sauces"]: formValues.sauce.sauces.filter((sauce) => sauce !== value) } });
-        } else if (formValues.sauce.sauces.length < 1 && !formValues.sauce.sauces.includes(value)) {
-          setFormValues({ ...formValues, ["sauce"]: { ...formValues.sauce, ["sauces"]: [...formValues.sauce.sauces, value] } });
-        }
-      }
-    }
-  };
 
   const getLocation = (event) => {
     event.preventDefault();
@@ -217,137 +162,7 @@ const App = () => {
           </FormContainerClose>
         </Link>
         <FormContainer>
-          <OrderForm id="pizza-form">
-            <FormMainHeader bgColor="#FF4B00">
-              <FormMainHeaderText>Build Your Own Pizza</FormMainHeaderText>
-            </FormMainHeader>
-            <OrderFormSection>
-              <FormHeader bgColor="#FF4b00cc">
-                <FormSubHeader>Customer Information</FormSubHeader>
-              </FormHeader>
-              <InnerOrderFormSection flow="column nowrap" justify="space-evenly" align="center">
-                <OrderFormInput id="name-input" name="name-input" placeholder="Enter Full Name" onChange={(e) => handleChange(e)} />
-                <OrderFormLabel htmlFor="name-input">Customer Name</OrderFormLabel>
-              </InnerOrderFormSection>
-            </OrderFormSection>
-            <OrderFormSection>
-              <FormHeader bgColor="#FF4b00cc">
-                <FormSubHeader>Choice Of Size</FormSubHeader>
-              </FormHeader>
-              <InnerOrderFormSection flow="column nowrap" justify="space-evenly" align="center">
-                <Select handleChange={handleChange} />
-              </InnerOrderFormSection>
-            </OrderFormSection>
-            <OrderFormSection>
-              <FormHeader bgColor="#FF4b00cc">
-                <FormSubHeader>Choice Of Crust</FormSubHeader>
-              </FormHeader>
-              <InnerOrderFormSection flow="column wrap" justify="space-evenly" align="center">
-                <RadioLabel width="30%">
-                  <RadioInput name="crust" type="radio" value="Regular" onChange={(e) => handleChange(e)} checked={formValues.crust === `Regular`} />
-                  Regular
-                </RadioLabel>
-                <RadioLabel width="30%">
-                  <RadioInput name="crust" type="radio" value="Thin" onChange={(e) => handleChange(e)} checked={formValues.crust === `Thin`} />
-                  Thin
-                </RadioLabel>
-                <RadioLabel width="30%">
-                  <RadioInput name="crust" type="radio" value="New York" onChange={(e) => handleChange(e)} checked={formValues.crust === `New York`} />
-                  New York
-                </RadioLabel>
-                <RadioLabel width="30%">
-                  <RadioInput name="crust" type="radio" value="Deep Dish" onChange={(e) => handleChange(e)} checked={formValues.crust === `Deep Dish`} />
-                  Deep Dish
-                </RadioLabel>
-                <RadioLabel width="30%">
-                  <RadioInput name="crust" type="radio" value="Stuffed" onChange={(e) => handleChange(e)} checked={formValues.crust === `Stuffed`} />
-                  Stuffed
-                </RadioLabel>
-              </InnerOrderFormSection>
-            </OrderFormSection>
-            <OrderFormSection>
-              <FormHeader bgColor="#FF4b00cc">
-                <FormSubHeader>Choice Of Sauce</FormSubHeader>
-              </FormHeader>
-              <InnerOrderFormSection flow="column nowrap" justify="space-evenly" align="center">
-                <SauceInputContainer>
-                  <RadioLabel width="30%">
-                    <RadioInput name="sauceAmount" type="radio" value="Half" onChange={(e) => handleChange(e)} checked={formValues.sauce.amount === `Half`} />
-                    Half 'n Half
-                  </RadioLabel>
-                  <RadioLabel width="30%">
-                    <RadioInput name="sauceAmount" type="radio" value="Whole" onChange={(e) => handleChange(e)} checked={formValues.sauce.amount === `Whole`} />
-                    Whole
-                  </RadioLabel>
-                </SauceInputContainer>
-                <SauceInputContainer>
-                  <CheckBoxLabel width="30%">
-                    <CheckBoxInput type="checkbox" name="sauce" value="Original" checked={formValues.sauce.sauces.includes("Original")} onChange={(e) => handleChange(e)} />
-                    Original
-                  </CheckBoxLabel>
-                  <CheckBoxLabel width="30%">
-                    <CheckBoxInput type="checkbox" name="sauce" value="BBQ" checked={formValues.sauce.sauces.includes("BBQ")} onChange={(e) => handleChange(e)} />
-                    BBQ
-                  </CheckBoxLabel>
-                  <CheckBoxLabel width="30%">
-                    <CheckBoxInput type="checkbox" name="sauce" value="Ranch" checked={formValues.sauce.sauces.includes("Ranch")} onChange={(e) => handleChange(e)} />
-                    Ranch
-                  </CheckBoxLabel>
-                  <CheckBoxLabel width="30%">
-                    <CheckBoxInput type="checkbox" name="sauce" value="Buffalo" checked={formValues.sauce.sauces.includes("Buffalo")} onChange={(e) => handleChange(e)} />
-                    Buffalo
-                  </CheckBoxLabel>
-                  <CheckBoxLabel width="30%">
-                    <CheckBoxInput type="checkbox" name="sauce" value="Alfredo" checked={formValues.sauce.sauces.includes("Alfredo")} onChange={(e) => handleChange(e)} />
-                    Alfredo
-                  </CheckBoxLabel>
-                </SauceInputContainer>
-              </InnerOrderFormSection>
-            </OrderFormSection>
-            <OrderFormSection>
-              <FormHeader bgColor="#FF4b00cc">
-                <FormSubHeader>Choice Of Toppings</FormSubHeader>
-              </FormHeader>
-              <InnerOrderFormSection flow="column nowrap" justify="space-evenly" align="center">
-                <InvisibleCheckboxContainer>
-                  <InvisibleCheckBox className="topping-menu" id="meat" name="meat" type="checkbox" />
-                  <InvisibleCheckBoxLabel
-                    htmlFor="meat"
-                    width="50%"
-                    className="topping-label"
-                    onClick={(e) => {
-                      activateMenu(e);
-                    }}
-                  >
-                    Meat
-                  </InvisibleCheckBoxLabel>
-                  <InvisibleCheckBox className="topping-menu" id="veggies" name="veggies" type="checkbox" />
-                  <InvisibleCheckBoxLabel
-                    htmlFor="veggies"
-                    width="50%"
-                    className="topping-label"
-                    onClick={(e) => {
-                      activateMenu(e);
-                    }}
-                  >
-                    Veggies
-                  </InvisibleCheckBoxLabel>
-                </InvisibleCheckboxContainer>
-              </InnerOrderFormSection>
-            </OrderFormSection>
-            <OrderFormSection>
-              <FormHeader bgColor="#FF4b00cc">
-                <FormSubHeader>Special Instructions</FormSubHeader>
-              </FormHeader>
-              <InnerOrderFormSection></InnerOrderFormSection>
-            </OrderFormSection>
-            <OrderFormSection>
-              <FormHeader bgColor="#FF4b00cc">
-                <FormSubHeader>Quantity / Add To Order</FormSubHeader>
-              </FormHeader>
-              <InnerOrderFormSection></InnerOrderFormSection>
-            </OrderFormSection>
-          </OrderForm>
+          <OrderForm setFormValues={setFormValues} formValues={formValues} handleChange={handleChange} />
         </FormContainer>
       </Route>
       <HeroContainer>
@@ -355,7 +170,7 @@ const App = () => {
           Bloomtech Eats
         </Header>
         <SubHeader color="#fefefe">Delivering Food To Coders Everywhere...</SubHeader>
-        <Form>
+        <Form marginTop="3rem">
           <FormSection>
             <FormInnerSection>
               <Input id="address" name="address" className="address" placeholder="ie - 1234 Example St City, State, Zipcode" />

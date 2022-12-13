@@ -86,9 +86,9 @@ const StyledOption = styled.option`
 `;
 
 export const Select = function (props) {
-  const { handleChange } = props;
+  const { handleChange, setFormValues, formValues } = props;
   return (
-    <StyledSelect id="size-dropdown" onChange={(e) => handleChange(e)}>
+    <StyledSelect id="size-dropdown" onChange={(e) => handleChange(e, setFormValues, formValues)}>
       <StyledOption>-- Select Size --</StyledOption>
       <StyledOption>Personal</StyledOption>
       <StyledOption>Small</StyledOption>
@@ -120,5 +120,25 @@ export const InvisibleCheckBox = styled(CheckBoxInput)`
   & + .checked {
     background-color: #ff4b00;
     color: #fefefe;
+  }
+`;
+
+export const TextArea = styled.textarea`
+  position: relative;
+  height: 25rem;
+  width: 90%;
+  resize: none;
+  background-color: #fefefe40;
+  border: ${(props) => props.border};
+  border-radius: 1.5rem;
+  padding: 2rem;
+  font-size: 1.6rem;
+  color: ${(props) => props.color};
+
+  &:focus {
+    outline: none;
+    border-color: ${(props) => props.borderFocus};
+    background-color: #fefefe;
+    color: ${(props) => props.borderFocus};
   }
 `;

@@ -38,7 +38,11 @@ export const RadioLabel = styled.label`
   color: #fefefecc;
 `;
 
-export const CheckBoxLabel = styled(RadioLabel)``;
+export const CheckBoxLabel = styled(RadioLabel)`
+  font-size: 1.6rem;
+  text-align: center;
+  padding: 2rem 1rem;
+`;
 
 export const InvisibleCheckBoxLabel = styled(CheckBoxLabel)`
   height: 100%;

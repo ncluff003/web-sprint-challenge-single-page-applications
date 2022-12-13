@@ -28,7 +28,7 @@ export const OrderFormSection = styled.section`
 export const InnerOrderFormSection = styled.section`
   position: relative;
   height: max-content;
-  max-height: 30rem;
+  max-height: 35rem;
   width: 100%;
   display: flex;
   flex-flow: ${(props) => props.flow};
@@ -36,4 +36,6 @@ export const InnerOrderFormSection = styled.section`
   align-items: ${(props) => props.align};
   padding: 3rem 0;
   background-color: #fefefe40;
+
+  ${(props) => (props.active === true ? "display: flex" : "display: none")}
 `;
