@@ -109,5 +109,7 @@ export const handleChange = (event, setFormValues, formValues) => {
         },
       });
     }
+  } else if (type === `textarea`) {
+    setFormValues({ ...formValues, [name]: value });
   }
 };

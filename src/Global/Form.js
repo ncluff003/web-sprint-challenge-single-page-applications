@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { FormMainHeader, FormHeader, FormSubHeader } from "./Header";
-import { Select, OrderFormInput, RadioInput, CheckBoxInput, InvisibleCheckBox, TextArea } from "./Input";
+import { Select, OrderFormInput, RadioInput, CheckBoxInput, InvisibleCheckBox, TextArea, QuantityInput } from "./Input";
 import { CheckBoxLabel, RadioLabel, OrderFormLabel, InvisibleCheckBoxLabel } from "./Label";
 import { OrderFormSection, InnerOrderFormSection } from "./Section";
 import { FormMainHeaderText } from "./Paragraph";
-import { SauceInputContainer, InvisibleCheckboxContainer } from "./Container";
-import { OrderButton } from "./Button";
+import { SauceInputContainer, InvisibleCheckboxContainer, QuantityContainer, QuantityButtonContainer } from "./Container";
+import { OrderButton, QuantityButton } from "./Button";
 
 export const Form = styled.form`
   position: relative;
@@ -16,12 +16,14 @@ export const Form = styled.form`
   justify-content: flex-start;
   align-items: center;
   margin-top: ${(props) => props.marginTop};
+  margin-bottom: ${(props) => props.marginBottom};
   border-left: ${(props) => props.borderLeft};
   border-right: ${(props) => props.borderRight};
+  border-bottom: ${(props) => props.borderBottom};
 `;
 
 export const OrderForm = function (props) {
-  const { setFormValues, formValues, handleChange } = props;
+  const { setFormValues, formValues, handleChange, quantity, setQuantity } = props;
 
   const money = new Intl.NumberFormat("en-us", {
     style: `currency`,
@@ -29,8 +31,27 @@ export const OrderForm = function (props) {
     minimumFractionDigits: 2,
   });
 
+  const changeQuantity = (event) => {
+    const pizzaSize = document.querySelector("#size-dropdown");
+    const pizzaSizeOptions = document.querySelectorAll(".option");
+    const individualPizzaCost = parseInt(pizzaSizeOptions[pizzaSize.selectedIndex].dataset.value);
+    console.log(individualPizzaCost);
+    event.preventDefault();
+    const clicked = event.target.closest("button");
+    const { value } = clicked;
+    if (value === `down`) {
+      if (formValues.quantity === 0) return;
+      setFormValues({ ...formValues, ["quantity"]: formValues.quantity - 1, ["total"]: individualPizzaCost * (formValues.quantity - 1) });
+    } else if (value === `up`) {
+      if (formValues.quantity === 100) return;
+      setFormValues({ ...formValues, ["quantity"]: formValues.quantity + 1, ["total"]: individualPizzaCost * (formValues.quantity + 1) });
+    }
+  };
+
+  const getTotal = () => {};
+
   return (
-    <Form id="pizza-form" marginTop="10rem" borderLeft=".2rem solid #FF4b00" borderRight=".2rem solid #FF4b00">
+    <Form id="pizza-form" marginTop="10rem" marginBottom="10rem" borderLeft=".2rem solid #FF4b00" borderRight=".2rem solid #FF4b00" borderBottom=".2rem solid #FF4b00">
       <FormMainHeader bgColor="#FF4B00">
         <FormMainHeaderText>Build Your Own Pizza</FormMainHeaderText>
       </FormMainHeader>
@@ -341,7 +362,7 @@ export const OrderForm = function (props) {
           <FormSubHeader>Special Instructions</FormSubHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="column nowrap" justify="center" align="center">
-          <TextArea id="special-text" border=".2rem solid #ff4b00cc" borderFocus="#ff4b00" color="#fefefecc" />
+          <TextArea name="specialInstructions" id="special-text" border=".2rem solid #ff4b00cc" borderFocus="#ff4b00" color="#fefefecc" onChange={(e) => handleChange(e, setFormValues, formValues)} />
         </InnerOrderFormSection>
       </OrderFormSection>
       <OrderFormSection>
@@ -349,6 +370,25 @@ export const OrderForm = function (props) {
           <FormSubHeader>Quantity / Add To Order</FormSubHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="row nowrap" justify="space-evenly" align="center">
+          <QuantityContainer>
+            <QuantityInput type="number" min={0} max={100} value={formValues.quantity} readOnly={true}></QuantityInput>
+            <QuantityButtonContainer>
+              <QuantityButton
+                borderColor="#FF4b00"
+                value="up"
+                onClick={(e) => {
+                  changeQuantity(e);
+                }}
+              ></QuantityButton>
+              <QuantityButton
+                borderColor="#FF4b00"
+                value="down"
+                onClick={(e) => {
+                  changeQuantity(e);
+                }}
+              ></QuantityButton>
+            </QuantityButtonContainer>
+          </QuantityContainer>
           <OrderButton>Add To Order &nbsp; &nbsp; {money.format(formValues.total)}</OrderButton>
         </InnerOrderFormSection>
       </OrderFormSection>

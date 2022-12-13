@@ -79,3 +79,23 @@ export const InvisibleCheckboxContainer = styled.div`
   justify-content: space-evenly;
   align-items: center;
 `;
+
+export const QuantityContainer = styled.div`
+  position: relative;
+  height: max-content;
+  width: max-content;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+  align-items: center;
+`;
+
+export const QuantityButtonContainer = styled.div`
+  position: relative;
+  height: 6rem;
+  width: 4rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  align-items: center;
+`;

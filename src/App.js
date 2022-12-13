@@ -119,6 +119,7 @@ const App = () => {
   const [restaurants, setRestaurants] = useState([...RestaurantData]);
   const [location, setLocation] = useState("");
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [quantity, setQuantity] = useState(0);
 
   const getLocation = (event) => {
     event.preventDefault();
@@ -162,7 +163,7 @@ const App = () => {
           </FormContainerClose>
         </Link>
         <FormContainer>
-          <OrderForm setFormValues={setFormValues} formValues={formValues} handleChange={handleChange} />
+          <OrderForm setFormValues={setFormValues} formValues={formValues} handleChange={handleChange} quantity={quantity} setQuantity={setQuantity} />
         </FormContainer>
       </Route>
       <HeroContainer>

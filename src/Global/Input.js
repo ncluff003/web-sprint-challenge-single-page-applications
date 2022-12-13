@@ -89,12 +89,24 @@ export const Select = function (props) {
   const { handleChange, setFormValues, formValues } = props;
   return (
     <StyledSelect id="size-dropdown" onChange={(e) => handleChange(e, setFormValues, formValues)}>
-      <StyledOption>-- Select Size --</StyledOption>
-      <StyledOption>Personal</StyledOption>
-      <StyledOption>Small</StyledOption>
-      <StyledOption>Medium</StyledOption>
-      <StyledOption>Large</StyledOption>
-      <StyledOption>Extra Large</StyledOption>
+      <StyledOption className="option" data-value={0}>
+        -- Select Size --
+      </StyledOption>
+      <StyledOption className="option" data-value={7.5}>
+        Personal
+      </StyledOption>
+      <StyledOption className="option" data-value={9}>
+        Small
+      </StyledOption>
+      <StyledOption className="option" data-value={11}>
+        Medium
+      </StyledOption>
+      <StyledOption className="option" data-value={13.5}>
+        Large
+      </StyledOption>
+      <StyledOption className="option" data-value={15}>
+        Extra Large
+      </StyledOption>
     </StyledSelect>
   );
 };
@@ -141,4 +153,8 @@ export const TextArea = styled.textarea`
     background-color: #fefefe;
     color: ${(props) => props.borderFocus};
   }
+`;
+
+export const QuantityInput = styled(Input)`
+  height: 6rem;
 `;
