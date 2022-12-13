@@ -39,3 +39,22 @@ export const RadioLabel = styled.label`
 `;
 
 export const CheckBoxLabel = styled(RadioLabel)``;
+
+export const InvisibleCheckBoxLabel = styled(CheckBoxLabel)`
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fefefe20;
+  border: 0.2rem solid #ff4b00cc;
+  color: #ff4b00cc;
+
+  &:last-of-type {
+    border-left: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;

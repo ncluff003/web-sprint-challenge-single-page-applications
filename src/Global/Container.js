@@ -68,3 +68,14 @@ export const SauceInputContainer = styled.div`
     height: 67%;
   }
 `;
+
+export const InvisibleCheckboxContainer = styled.div`
+  position: relative;
+  height: max-content;
+  min-height: 8rem;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+  align-items: center;
+`;

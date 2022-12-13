@@ -74,7 +74,6 @@ const ExpenseLevelContainer = styled.div`
 
 export const Restaurant = function (props) {
   const { name, categories, deliveryTime, deliveryFee, expenseLevel, style } = props.restaurant;
-  console.log(props, style);
   return (
     <StyledRestaurant>
       <MainInfoContainer>

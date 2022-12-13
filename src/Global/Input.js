@@ -23,6 +23,9 @@ export const Input = styled.input`
   border-bottom: 0.2rem solid #ff4b00cc;
 
   // Set opacity of placeholder to zero immediately.
+  &::placeholder {
+    opacity: 0;
+  }
   &::-webkit-input-placeholder,
   &::-moz-placeholder,
   &::placeholder {
@@ -83,8 +86,10 @@ const StyledOption = styled.option`
 `;
 
 export const Select = function (props) {
+  const { handleChange } = props;
   return (
-    <StyledSelect id="size-dropdown">
+    <StyledSelect id="size-dropdown" onChange={(e) => handleChange(e)}>
+      <StyledOption>-- Select Size --</StyledOption>
       <StyledOption>Personal</StyledOption>
       <StyledOption>Small</StyledOption>
       <StyledOption>Medium</StyledOption>
@@ -105,4 +110,15 @@ export const RadioInput = styled.input`
 
 export const CheckBoxInput = styled(RadioInput)`
   border-color: #ff4b00;
+`;
+
+export const InvisibleCheckBox = styled(CheckBoxInput)`
+  appearance: none;
+  -webkit-appearance: none;
+  display: none;
+
+  & + .checked {
+    background-color: #ff4b00;
+    color: #fefefe;
+  }
 `;
