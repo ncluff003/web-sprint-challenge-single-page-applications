@@ -52,3 +52,19 @@ export const FormContainer = styled(Container)`
   z-index: 10;
   overflow-y: auto;
 `;
+
+export const SauceInputContainer = styled.div`
+  position: relative;
+  width: 95%;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  &:first-of-type {
+    height: 33%;
+    background-color: #11111144;
+  }
+  &:last-of-type {
+    height: 67%;
+  }
+`;

@@ -102,3 +102,7 @@ export const RadioInput = styled.input`
     accent-color: #ff4b00;
   }
 `;
+
+export const CheckBoxInput = styled(RadioInput)`
+  border-color: #ff4b00;
+`;

@@ -37,3 +37,5 @@ export const RadioLabel = styled.label`
   font-size: 2rem;
   color: #fefefecc;
 `;
+
+export const CheckBoxLabel = styled(RadioLabel)``;

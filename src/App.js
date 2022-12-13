@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, Route } from "react-router-dom";
-import { Container, FoodContainer, FormContainer, FormContainerClose } from "./Global/Container";
+import { Container, FoodContainer, FormContainer, FormContainerClose, SauceInputContainer } from "./Global/Container";
 import { HeroContainer, FoodInfoContainer } from "./Home/Hero";
 import { AssistantHeader, AssistantSubHeader, FormHeader, FormMainHeader, FormSubHeader, Header, SubHeader } from "./Global/Header";
 import { FormInnerSection, FormSection, InnerOrderFormSection, OrderFormSection } from "./Global/Section";
@@ -8,8 +8,8 @@ import { Button, OrderButton, SearchButton } from "./Global/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { Form, OrderForm } from "./Global/Form";
-import { Label, OrderFormLabel, RadioLabel } from "./Global/Label";
-import { Input, OrderFormInput, RadioContainer, RadioInput, Select } from "./Global/Input";
+import { CheckBoxLabel, Label, OrderFormLabel, RadioLabel } from "./Global/Label";
+import { CheckBoxInput, Input, OrderFormInput, RadioContainer, RadioInput, Select } from "./Global/Input";
 import { FormMainHeaderText, TagLine } from "./Global/Paragraph";
 import { Restaurant } from "./Home/Restaurant";
 import axios from "axios";
@@ -143,24 +143,24 @@ const App = () => {
                 <FormSubHeader>Choice Of Crust</FormSubHeader>
               </FormHeader>
               <InnerOrderFormSection flow="column wrap" justify="space-evenly" align="center">
-                <RadioLabel name="crust" width="30%">
-                  <RadioInput type="radio" />
+                <RadioLabel width="30%">
+                  <RadioInput name="crust" type="radio" />
                   Regular
                 </RadioLabel>
-                <RadioLabel name="crust" width="30%">
-                  <RadioInput type="radio" />
+                <RadioLabel width="30%">
+                  <RadioInput name="crust" type="radio" />
                   Thin
                 </RadioLabel>
-                <RadioLabel name="crust" width="30%">
-                  <RadioInput type="radio" />
+                <RadioLabel width="30%">
+                  <RadioInput name="crust" type="radio" />
                   New York
                 </RadioLabel>
-                <RadioLabel name="crust" width="30%">
-                  <RadioInput type="radio" />
+                <RadioLabel width="30%">
+                  <RadioInput name="crust" type="radio" />
                   Deep Dish
                 </RadioLabel>
-                <RadioLabel name="crust" width="30%">
-                  <RadioInput type="radio" />
+                <RadioLabel width="30%">
+                  <RadioInput name="crust" type="radio" />
                   Stuffed
                 </RadioLabel>
               </InnerOrderFormSection>
@@ -169,21 +169,58 @@ const App = () => {
               <FormHeader bgColor="#FF4b00cc">
                 <FormSubHeader>Choice Of Sauce</FormSubHeader>
               </FormHeader>
+              <InnerOrderFormSection flow="column nowrap" justify="space-evenly" align="center">
+                <SauceInputContainer>
+                  <RadioLabel width="30%">
+                    <RadioInput name="sauceAmount" type="radio" />
+                    Half
+                  </RadioLabel>
+                  <RadioLabel width="30%">
+                    <RadioInput name="sauceAmount" type="radio" />
+                    Whole
+                  </RadioLabel>
+                </SauceInputContainer>
+                <SauceInputContainer>
+                  <CheckBoxLabel width="30%">
+                    <CheckBoxInput type="checkbox" />
+                    Original
+                  </CheckBoxLabel>
+                  <CheckBoxLabel width="30%">
+                    <CheckBoxInput type="checkbox" />
+                    BBQ
+                  </CheckBoxLabel>
+                  <CheckBoxLabel width="30%">
+                    <CheckBoxInput type="checkbox" />
+                    Ranch
+                  </CheckBoxLabel>
+                  <CheckBoxLabel width="30%">
+                    <CheckBoxInput type="checkbox" />
+                    Buffalo
+                  </CheckBoxLabel>
+                  <CheckBoxLabel width="30%">
+                    <CheckBoxInput type="checkbox" />
+                    Alfredo
+                  </CheckBoxLabel>
+                </SauceInputContainer>
+              </InnerOrderFormSection>
             </OrderFormSection>
             <OrderFormSection>
               <FormHeader bgColor="#FF4b00cc">
                 <FormSubHeader>Choice Of Toppings</FormSubHeader>
               </FormHeader>
+              <InnerOrderFormSection></InnerOrderFormSection>
             </OrderFormSection>
             <OrderFormSection>
               <FormHeader bgColor="#FF4b00cc">
                 <FormSubHeader>Special Instructions</FormSubHeader>
               </FormHeader>
+              <InnerOrderFormSection></InnerOrderFormSection>
             </OrderFormSection>
             <OrderFormSection>
               <FormHeader bgColor="#FF4b00cc">
                 <FormSubHeader>Quantity / Add To Order</FormSubHeader>
               </FormHeader>
+              <InnerOrderFormSection></InnerOrderFormSection>
             </OrderFormSection>
           </OrderForm>
         </FormContainer>
