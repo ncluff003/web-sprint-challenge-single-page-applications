@@ -19,3 +19,21 @@ export const Label = styled.label`
     cursor: pointer;
   }
 `;
+
+export const OrderFormLabel = styled(Label)`
+  width: 90%;
+  margin: ${(props) => props.margin};
+`;
+
+export const RadioLabel = styled.label`
+  position: relative;
+  height: max-content;
+  width: ${(props) => props.width};
+  padding: 2rem;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 2rem;
+  color: #fefefecc;
+`;

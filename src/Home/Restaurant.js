@@ -43,7 +43,6 @@ const RestaurantCoverImage = styled.img`
   /* background-image: ; */
   background-size: cover;
   background-repeat: no-repeat;
-  border-radius: 1.25rem;
 
   ${(props) => (props.name === `Chick-Fil-A` ? `background-image: url(${require("./../../src/Chick-Fil-A.jpeg")})` : null)}
   ${(props) => (props.name === `Panda Express` ? `background-image: url(${require("./../../src/Panda-Express.jpeg")})` : null)}

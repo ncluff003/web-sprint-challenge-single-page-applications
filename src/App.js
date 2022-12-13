@@ -3,13 +3,13 @@ import { Link, Route } from "react-router-dom";
 import { Container, FoodContainer, FormContainer, FormContainerClose } from "./Global/Container";
 import { HeroContainer, FoodInfoContainer } from "./Home/Hero";
 import { AssistantHeader, AssistantSubHeader, FormHeader, FormMainHeader, FormSubHeader, Header, SubHeader } from "./Global/Header";
-import { FormInnerSection, FormSection, OrderFormSection } from "./Global/Section";
+import { FormInnerSection, FormSection, InnerOrderFormSection, OrderFormSection } from "./Global/Section";
 import { Button, OrderButton, SearchButton } from "./Global/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { Form, OrderForm } from "./Global/Form";
-import { Label } from "./Global/Label";
-import { Input } from "./Global/Input";
+import { Label, OrderFormLabel, RadioLabel } from "./Global/Label";
+import { Input, OrderFormInput, RadioContainer, RadioInput, Select } from "./Global/Input";
 import { FormMainHeaderText, TagLine } from "./Global/Paragraph";
 import { Restaurant } from "./Home/Restaurant";
 import axios from "axios";
@@ -125,16 +125,45 @@ const App = () => {
               <FormHeader bgColor="#FF4b00cc">
                 <FormSubHeader>Customer Information</FormSubHeader>
               </FormHeader>
+              <InnerOrderFormSection flow="column nowrap" justify="space-evenly" align="center">
+                <OrderFormInput id="name-input" name="name-input" placeholder="Enter Full Name" />
+                <OrderFormLabel htmlFor="name-input">Customer Name</OrderFormLabel>
+              </InnerOrderFormSection>
             </OrderFormSection>
             <OrderFormSection>
               <FormHeader bgColor="#FF4b00cc">
                 <FormSubHeader>Choice Of Size</FormSubHeader>
               </FormHeader>
+              <InnerOrderFormSection flow="column nowrap" justify="space-evenly" align="center">
+                <Select />
+              </InnerOrderFormSection>
             </OrderFormSection>
             <OrderFormSection>
               <FormHeader bgColor="#FF4b00cc">
                 <FormSubHeader>Choice Of Crust</FormSubHeader>
               </FormHeader>
+              <InnerOrderFormSection flow="column wrap" justify="space-evenly" align="center">
+                <RadioLabel name="crust" width="30%">
+                  <RadioInput type="radio" />
+                  Regular
+                </RadioLabel>
+                <RadioLabel name="crust" width="30%">
+                  <RadioInput type="radio" />
+                  Thin
+                </RadioLabel>
+                <RadioLabel name="crust" width="30%">
+                  <RadioInput type="radio" />
+                  New York
+                </RadioLabel>
+                <RadioLabel name="crust" width="30%">
+                  <RadioInput type="radio" />
+                  Deep Dish
+                </RadioLabel>
+                <RadioLabel name="crust" width="30%">
+                  <RadioInput type="radio" />
+                  Stuffed
+                </RadioLabel>
+              </InnerOrderFormSection>
             </OrderFormSection>
             <OrderFormSection>
               <FormHeader bgColor="#FF4b00cc">

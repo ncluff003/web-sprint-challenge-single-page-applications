@@ -49,11 +49,56 @@ export const Input = styled.input`
       border: 0.2rem solid #cf352e;
     }
     /*
-      height, min-height, width, min-width, font-size, and padding need to be set by a different component.
+    height, min-height, width, min-width, font-size, and padding need to be set by a different component.
     */
   }
   &:not(:placeholder-shown) + label,
   &:focus + label {
-    transform: translate(-5rem, -4.5rem) scale(0.85);
+    transform: translate(-5rem, -4.75rem) scale(0.85);
+  }
+`;
+
+export const OrderFormInput = styled(Input)`
+  width: 90%;
+  border-radius: 1.5rem;
+  margin: ${(props) => props.margin};
+`;
+
+const StyledSelect = styled.select`
+  position: relative;
+  height: max-content;
+  width: 90%;
+  padding: 2rem;
+  border: 0.2rem solid #ff4b00cc;
+  border-radius: 1.5rem;
+  background-color: #222222cc;
+  font-size: 2rem;
+  color: #fefefecc;
+`;
+
+const StyledOption = styled.option`
+  position: relative;
+  font-size: 2rem;
+  color: #fefefecc;
+`;
+
+export const Select = function (props) {
+  return (
+    <StyledSelect id="size-dropdown">
+      <StyledOption>Personal</StyledOption>
+      <StyledOption>Small</StyledOption>
+      <StyledOption>Medium</StyledOption>
+      <StyledOption>Large</StyledOption>
+      <StyledOption>Extra Large</StyledOption>
+    </StyledSelect>
+  );
+};
+
+export const RadioInput = styled.input`
+  position: relative;
+  height: 3rem;
+  width: 3rem;
+  &:checked {
+    accent-color: #ff4b00;
   }
 `;
