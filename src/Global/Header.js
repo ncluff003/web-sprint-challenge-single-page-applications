@@ -56,3 +56,16 @@ export const FormSubHeader = styled.h3`
   font-size: 3rem;
   color: #fefefe;
 `;
+
+export const FormSubSubHeader = styled(FormSubHeader)`
+  font-size: 1.6rem;
+  margin: 0 0 0 2rem;
+`;
+
+export const ErrorHeader = styled(FormSubSubHeader)`
+  color: orangered;
+  background-color: #fefefe;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+`;

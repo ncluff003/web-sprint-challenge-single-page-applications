@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, Route } from "react-router-dom";
 import { Container, FoodContainer, FormContainer, FormContainerClose } from "./Global/Container";
 import { HeroContainer, FoodInfoContainer } from "./Home/Hero";
@@ -115,11 +115,27 @@ const initialFormValues = {
   total: 0,
 };
 
+const initialFormErrors = {
+  name: "",
+  size: "",
+  crust: "",
+  sauces: {
+    amount: "",
+    sauces: "",
+  },
+  toppings: {
+    chosenToppings: "",
+  },
+  specialInstructions: "",
+  quantity: "",
+};
+
 const App = () => {
   const [restaurants, setRestaurants] = useState([...RestaurantData]);
   const [location, setLocation] = useState("");
   const [formValues, setFormValues] = useState(initialFormValues);
   const [quantity, setQuantity] = useState(0);
+  const [errors, setErrors] = useState(initialFormErrors);
 
   const getLocation = (event) => {
     event.preventDefault();
@@ -163,7 +179,7 @@ const App = () => {
           </FormContainerClose>
         </Link>
         <FormContainer>
-          <OrderForm setFormValues={setFormValues} formValues={formValues} handleChange={handleChange} quantity={quantity} setQuantity={setQuantity} />
+          <OrderForm setFormValues={setFormValues} formValues={formValues} handleChange={handleChange} quantity={quantity} setQuantity={setQuantity} errors={errors} setErrors={setErrors} />
         </FormContainer>
       </Route>
       <HeroContainer>
@@ -183,7 +199,7 @@ const App = () => {
           </FormSection>
         </Form>
         <Link to="/pizza">
-          <OrderButton id="order-pizza" onMouseOver={revealFavorite} onMouseLeave={hideFavorite}>
+          <OrderButton marginTop="3rem" id="order-pizza" data-cy="order-pizza" onMouseOver={revealFavorite} onMouseLeave={hideFavorite}>
             Our Favorite:
           </OrderButton>
         </Link>

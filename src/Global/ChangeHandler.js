@@ -1,16 +1,21 @@
-export const handleChange = (event, setFormValues, formValues) => {
+import * as yup from "yup";
+
+export const handleChange = (event, setFormValues, formValues, schema, errors, setErrors) => {
   if (event.target.type !== `radio` && event.target.type !== `checkbox`) {
     event.preventDefault();
   }
   const clicked = event.target;
-  if (clicked.closest("label")) {
-    console.log(clicked.closest("label").textContent);
-  }
   const { type, name, value, checked } = clicked;
   const valueToUse = type === "checkbox" ? checked : type === "radio" ? checked : value;
-  console.log(type, name, value, valueToUse);
   if (name === `name-input`) {
-    setFormValues({ ...formValues, ["name"]: value });
+    yup
+      .reach(schema, ["name"])
+      .validate(value)
+      .then(() => {
+        setErrors({ ...errors, ["name"]: "" });
+        setFormValues({ ...formValues, ["name"]: value });
+      })
+      .catch((error) => setErrors({ ...errors, ["name"]: error.errors[0] }));
   } else if (type === "select-one") {
     if (value === `-- Select Size --`) {
       setFormValues({ ...formValues, ["size"]: "" });

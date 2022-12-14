@@ -38,7 +38,7 @@ export const OrderButton = styled(Button)`
   border-radius: 5rem;
   font-size: 2rem;
   color: #fefefecc;
-  margin-top: 0rem;
+  margin-top: ${(props) => props.marginTop};
 
   &:hover {
     border-color: #ff4b00;
@@ -57,6 +57,9 @@ export const QuantityButton = styled.button`
   width: 100%;
   background-color: #222222cc;
   border: 0.2rem solid ${(props) => `${props.borderColor}CC`};
+  font-size: 1.6rem;
+  color: ${(props) => `${props.borderColor}CC`};
+
   &:first-of-type {
     border-top-right-radius: 0.5rem;
   }
@@ -66,6 +69,7 @@ export const QuantityButton = styled.button`
 
   &:hover {
     cursor: pointer;
+    color: #fefefe;
     border-color: ${(props) => props.borderColor};
     background-color: ${(props) => props.borderColor};
     transition: border 0.5s, background-color 0.5s, color 0.5s;

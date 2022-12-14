@@ -88,7 +88,7 @@ const StyledOption = styled.option`
 export const Select = function (props) {
   const { handleChange, setFormValues, formValues } = props;
   return (
-    <StyledSelect id="size-dropdown" onChange={(e) => handleChange(e, setFormValues, formValues)}>
+    <StyledSelect id="size-dropdown" data-cy="size-dropdown" onChange={(e) => handleChange(e, setFormValues, formValues)}>
       <StyledOption className="option" data-value={0}>
         -- Select Size --
       </StyledOption>

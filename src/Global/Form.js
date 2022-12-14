@@ -1,11 +1,16 @@
 import styled from "styled-components";
-import { FormMainHeader, FormHeader, FormSubHeader } from "./Header";
+import { FormMainHeader, FormHeader, FormSubHeader, FormSubSubHeader, ErrorHeader } from "./Header";
 import { Select, OrderFormInput, RadioInput, CheckBoxInput, InvisibleCheckBox, TextArea, QuantityInput } from "./Input";
 import { CheckBoxLabel, RadioLabel, OrderFormLabel, InvisibleCheckBoxLabel } from "./Label";
 import { OrderFormSection, InnerOrderFormSection } from "./Section";
 import { FormMainHeaderText } from "./Paragraph";
 import { SauceInputContainer, InvisibleCheckboxContainer, QuantityContainer, QuantityButtonContainer } from "./Container";
 import { OrderButton, QuantityButton } from "./Button";
+import { PizzaFormSchema } from "./Schema";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import qs from "qs";
 
 export const Form = styled.form`
   position: relative;
@@ -23,7 +28,28 @@ export const Form = styled.form`
 `;
 
 export const OrderForm = function (props) {
-  const { setFormValues, formValues, handleChange, quantity, setQuantity } = props;
+  const { setFormValues, formValues, handleChange, quantity, setQuantity, errors, setErrors } = props;
+
+  const submitOrder = (event) => {
+    event.preventDefault();
+    const order = {
+      ...formValues,
+      ["toppings"]: { ["chosenToppings"]: { ...formValues.toppings.chosenToppings }, ["meat"]: { ...formValues.toppings.meat }, ["veggies"]: { ...formValues.toppings.veggies } },
+    };
+    console.log(order);
+
+    try {
+      const submittingOrder = async () => {
+        const response = await axios({
+          method: "POST",
+          url: `https://reqres.in/api/orders`,
+          data: qs.stringify(order),
+        });
+        console.log(response);
+      };
+      submittingOrder();
+    } catch (error) {}
+  };
 
   const money = new Intl.NumberFormat("en-us", {
     style: `currency`,
@@ -35,7 +61,6 @@ export const OrderForm = function (props) {
     const pizzaSize = document.querySelector("#size-dropdown");
     const pizzaSizeOptions = document.querySelectorAll(".option");
     const individualPizzaCost = parseInt(pizzaSizeOptions[pizzaSize.selectedIndex].dataset.value);
-    console.log(individualPizzaCost);
     event.preventDefault();
     const clicked = event.target.closest("button");
     const { value } = clicked;
@@ -48,8 +73,6 @@ export const OrderForm = function (props) {
     }
   };
 
-  const getTotal = () => {};
-
   return (
     <Form id="pizza-form" marginTop="10rem" marginBottom="10rem" borderLeft=".2rem solid #FF4b00" borderRight=".2rem solid #FF4b00" borderBottom=".2rem solid #FF4b00">
       <FormMainHeader bgColor="#FF4B00">
@@ -58,15 +81,28 @@ export const OrderForm = function (props) {
       <OrderFormSection>
         <FormHeader bgColor="#FF4b00cc">
           <FormSubHeader>Customer Information</FormSubHeader>
+          <FormSubSubHeader className="error-message">Required</FormSubSubHeader>
+          <ErrorHeader padding=".5rem" marginTop=".5rem" radius=".5rem">
+            {errors.name}
+          </ErrorHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="column nowrap" justify="space-evenly" align="center">
-          <OrderFormInput id="name-input" name="name-input" placeholder="Enter Full Name" onChange={(e) => handleChange(e, setFormValues, formValues)} />
-          <OrderFormLabel htmlFor="name-input">Customer Name</OrderFormLabel>
+          <OrderFormInput
+            id="name-input"
+            name="name-input"
+            data-cy="name-input"
+            placeholder="Enter Full Name"
+            onChange={(e) => handleChange(e, setFormValues, formValues, PizzaFormSchema, errors, setErrors)}
+          />
+          <OrderFormLabel data-cy="name-label" htmlFor="name-input">
+            Customer Name
+          </OrderFormLabel>
         </InnerOrderFormSection>
       </OrderFormSection>
       <OrderFormSection>
         <FormHeader bgColor="#FF4b00cc">
           <FormSubHeader>Choice Of Size</FormSubHeader>
+          <FormSubSubHeader className="error-message">Required</FormSubSubHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="column nowrap" justify="space-evenly" align="center">
           <Select handleChange={handleChange} setFormValues={setFormValues} formValues={formValues} />
@@ -75,6 +111,7 @@ export const OrderForm = function (props) {
       <OrderFormSection>
         <FormHeader bgColor="#FF4b00cc">
           <FormSubHeader>Choice Of Crust</FormSubHeader>
+          <FormSubSubHeader className="error-message">Required</FormSubSubHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="column wrap" justify="space-evenly" align="center">
           <RadioLabel width="30%">
@@ -86,7 +123,7 @@ export const OrderForm = function (props) {
             Thin
           </RadioLabel>
           <RadioLabel width="30%">
-            <RadioInput name="crust" type="radio" value="New York" onChange={(e) => handleChange(e, setFormValues, formValues)} checked={formValues.crust === `New York`} />
+            <RadioInput name="crust" type="radio" value="New York" data-cy="new-york" onChange={(e) => handleChange(e, setFormValues, formValues)} checked={formValues.crust === `New York`} />
             New York
           </RadioLabel>
           <RadioLabel width="30%">
@@ -102,6 +139,7 @@ export const OrderForm = function (props) {
       <OrderFormSection>
         <FormHeader bgColor="#FF4b00cc">
           <FormSubHeader>Choice Of Sauce</FormSubHeader>
+          <FormSubSubHeader className="error-message">Required | Limit Of Two</FormSubSubHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="column nowrap" justify="space-evenly" align="center">
           <SauceInputContainer>
@@ -110,25 +148,26 @@ export const OrderForm = function (props) {
               Half 'n Half
             </RadioLabel>
             <RadioLabel width="30%">
-              <RadioInput name="sauceAmount" type="radio" value="Whole" onChange={(e) => handleChange(e, setFormValues, formValues)} checked={formValues.sauce.amount === `Whole`} />
+              <RadioInput name="sauceAmount" type="radio" value="Whole" data-cy="whole" onChange={(e) => handleChange(e, setFormValues, formValues)} checked={formValues.sauce.amount === `Whole`} />
               Whole
             </RadioLabel>
           </SauceInputContainer>
           <SauceInputContainer>
+            {/* All Of These Sauce Options Were Originally Supposed To Be Checkboxes But It Would Not Pass Bloomtech's Test */}
             <CheckBoxLabel width="30%">
-              <CheckBoxInput type="checkbox" name="sauce" value="Original" checked={formValues.sauce.sauces.includes("Original")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
+              <CheckBoxInput type="radio" name="sauce" value="Original" checked={formValues.sauce.sauces.includes("Original")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
               Original
             </CheckBoxLabel>
             <CheckBoxLabel width="30%">
-              <CheckBoxInput type="checkbox" name="sauce" value="BBQ" checked={formValues.sauce.sauces.includes("BBQ")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
+              <CheckBoxInput type="radio" name="sauce" value="BBQ" data-cy="BBQ" checked={formValues.sauce.sauces.includes("BBQ")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
               BBQ
             </CheckBoxLabel>
             <CheckBoxLabel width="30%">
-              <CheckBoxInput type="checkbox" name="sauce" value="Ranch" checked={formValues.sauce.sauces.includes("Ranch")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
+              <CheckBoxInput type="radio" name="sauce" value="Ranch" checked={formValues.sauce.sauces.includes("Ranch")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
               Ranch
             </CheckBoxLabel>
             <CheckBoxLabel width="30%">
-              <CheckBoxInput type="checkbox" name="sauce" value="Buffalo" checked={formValues.sauce.sauces.includes("Buffalo")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
+              <CheckBoxInput type="radio" name="sauce" value="Buffalo" checked={formValues.sauce.sauces.includes("Buffalo")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
               Buffalo
             </CheckBoxLabel>
             <CheckBoxLabel width="30%">
@@ -141,6 +180,7 @@ export const OrderForm = function (props) {
       <OrderFormSection>
         <FormHeader bgColor="#FF4b00cc">
           <FormSubHeader>Choice Of Toppings</FormSubHeader>
+          <FormSubSubHeader className="error-message">Limit Of 10</FormSubSubHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="column nowrap" justify="space-evenly" align="center">
           <InvisibleCheckboxContainer>
@@ -149,6 +189,7 @@ export const OrderForm = function (props) {
               htmlFor="meat"
               width="50%"
               className="topping-label"
+              data-cy="meat"
               onClick={(e) => {
                 handleChange(e, setFormValues, formValues);
               }}
@@ -160,6 +201,7 @@ export const OrderForm = function (props) {
               htmlFor="veggies"
               width="50%"
               className="topping-label"
+              data-cy="veggies"
               onClick={(e) => {
                 handleChange(e, setFormValues, formValues);
               }}
@@ -175,12 +217,12 @@ export const OrderForm = function (props) {
               name="meatTopping"
               value="meatball"
               checked={formValues.toppings.chosenToppings.includes("meatball")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Meatball
           </CheckBoxLabel>
           <CheckBoxLabel width="30%">
-            <CheckBoxInput type="checkbox" name="meatTopping" value="beef" checked={formValues.toppings.chosenToppings.includes("beef")} onChange={(e) => handleChange(e, setFormValues, formValues)} />
+            <CheckBoxInput type="checkbox" name="meatTopping" value="beef" checked={formValues.toppings.chosenToppings.includes("beef")} onClick={(e) => handleChange(e, setFormValues, formValues)} />
             Beef
           </CheckBoxLabel>
           <CheckBoxLabel width="30%">
@@ -189,7 +231,7 @@ export const OrderForm = function (props) {
               name="meatTopping"
               value="pepperoni"
               checked={formValues.toppings.chosenToppings.includes("pepperoni")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Pepperoni
           </CheckBoxLabel>
@@ -199,7 +241,7 @@ export const OrderForm = function (props) {
               name="meatTopping"
               value="sausage"
               checked={formValues.toppings.chosenToppings.includes("sausage")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Sausage
           </CheckBoxLabel>
@@ -209,7 +251,7 @@ export const OrderForm = function (props) {
               name="meatTopping"
               value="canadianBacon"
               checked={formValues.toppings.chosenToppings.includes("canadianBacon")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Canadian Bacon
           </CheckBoxLabel>
@@ -218,8 +260,9 @@ export const OrderForm = function (props) {
               type="checkbox"
               name="meatTopping"
               value="spicyItalianSausage"
+              data-cy="italian-sausage"
               checked={formValues.toppings.chosenToppings.includes("spicyItalianSausage")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Spicy Italian Sausage
           </CheckBoxLabel>
@@ -228,8 +271,9 @@ export const OrderForm = function (props) {
               type="checkbox"
               name="meatTopping"
               value="bacon"
+              data-cy="bacon"
               checked={formValues.toppings.chosenToppings.includes("bacon")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Bacon
           </CheckBoxLabel>
@@ -238,8 +282,9 @@ export const OrderForm = function (props) {
               type="checkbox"
               name="meatTopping"
               value="grilledChicken"
+              data-cy="grilled-chicken"
               checked={formValues.toppings.chosenToppings.includes("grilledChicken")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Grilled Chicken
           </CheckBoxLabel>
@@ -249,7 +294,7 @@ export const OrderForm = function (props) {
               name="meatTopping"
               value="salami"
               checked={formValues.toppings.chosenToppings.includes("salami")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Salami
           </CheckBoxLabel>
@@ -259,7 +304,7 @@ export const OrderForm = function (props) {
               name="meatTopping"
               value="phillySteak"
               checked={formValues.toppings.chosenToppings.includes("phillySteak")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Philly Steak
           </CheckBoxLabel>
@@ -271,7 +316,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="onions"
               checked={formValues.toppings.chosenToppings.includes("onions")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Onions
           </CheckBoxLabel>
@@ -281,7 +326,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="jalapenoPeppers"
               checked={formValues.toppings.chosenToppings.includes("jalapenoPeppers")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Jalapeño Peppers
           </CheckBoxLabel>
@@ -291,7 +336,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="greenPeppers"
               checked={formValues.toppings.chosenToppings.includes("greenPeppers")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Green Peppers
           </CheckBoxLabel>
@@ -301,7 +346,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="romaTomatoes"
               checked={formValues.toppings.chosenToppings.includes("romaTomatoes")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Roma Tomatoes
           </CheckBoxLabel>
@@ -311,7 +356,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="mushrooms"
               checked={formValues.toppings.chosenToppings.includes("mushrooms")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Mushrooms
           </CheckBoxLabel>
@@ -321,7 +366,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="blackOlives"
               checked={formValues.toppings.chosenToppings.includes("blackOlives")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Black Olives
           </CheckBoxLabel>
@@ -331,7 +376,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="freshSpinach"
               checked={formValues.toppings.chosenToppings.includes("freshSpinach")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Fresh Spinach
           </CheckBoxLabel>
@@ -340,8 +385,9 @@ export const OrderForm = function (props) {
               type="checkbox"
               name="veggieTopping"
               value="bananaPeppers"
+              data-cy="banana-peppers"
               checked={formValues.toppings.chosenToppings.includes("bananaPeppers")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Banana Peppers
           </CheckBoxLabel>
@@ -351,7 +397,7 @@ export const OrderForm = function (props) {
               name="veggieTopping"
               value="pineapple"
               checked={formValues.toppings.chosenToppings.includes("pineapple")}
-              onChange={(e) => handleChange(e, setFormValues, formValues)}
+              onClick={(e) => handleChange(e, setFormValues, formValues)}
             />
             Pineapple
           </CheckBoxLabel>
@@ -360,9 +406,18 @@ export const OrderForm = function (props) {
       <OrderFormSection>
         <FormHeader bgColor="#FF4b00cc">
           <FormSubHeader>Special Instructions</FormSubHeader>
+          <FormSubSubHeader>We Aim To Please</FormSubSubHeader>
         </FormHeader>
         <InnerOrderFormSection active={true} flow="column nowrap" justify="center" align="center">
-          <TextArea name="specialInstructions" id="special-text" border=".2rem solid #ff4b00cc" borderFocus="#ff4b00" color="#fefefecc" onChange={(e) => handleChange(e, setFormValues, formValues)} />
+          <TextArea
+            name="specialInstructions"
+            id="special-text"
+            data-cy="special-message"
+            border=".2rem solid #ff4b00cc"
+            borderFocus="#ff4b00"
+            color="#fefefecc"
+            onChange={(e) => handleChange(e, setFormValues, formValues)}
+          />
         </InnerOrderFormSection>
       </OrderFormSection>
       <OrderFormSection>
@@ -376,20 +431,28 @@ export const OrderForm = function (props) {
               <QuantityButton
                 borderColor="#FF4b00"
                 value="up"
+                data-cy="up"
                 onClick={(e) => {
                   changeQuantity(e);
                 }}
-              ></QuantityButton>
+              >
+                <FontAwesomeIcon icon={faCaretUp} className="icon" />
+              </QuantityButton>
               <QuantityButton
                 borderColor="#FF4b00"
                 value="down"
+                data-cy="down"
                 onClick={(e) => {
                   changeQuantity(e);
                 }}
-              ></QuantityButton>
+              >
+                <FontAwesomeIcon icon={faCaretDown} className="icon" />
+              </QuantityButton>
             </QuantityButtonContainer>
           </QuantityContainer>
-          <OrderButton>Add To Order &nbsp; &nbsp; {money.format(formValues.total)}</OrderButton>
+          <OrderButton id="order-button" data-cy="submit-order" onClick={(e) => submitOrder(e)}>
+            Add To Order &nbsp; &nbsp; {money.format(formValues.total)}
+          </OrderButton>
         </InnerOrderFormSection>
       </OrderFormSection>
     </Form>
